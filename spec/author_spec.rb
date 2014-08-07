@@ -36,4 +36,22 @@ describe "Author" do
       expect(test_author).to eq test_author2
     end
   end
+
+  describe "edit" do
+    it "edits the author's name" do
+      test_author = Author.new({:name => "Charles Dickens"})
+      test_author.save
+      test_author.edit("Chuck Dickens")
+      expect(test_author.name).to eq "Chuck Dickens"
+    end
+  end
+
+  describe "delete" do
+    it "deletes the author from the database" do
+      test_author = Author.new({:name => "Charles Dickens"})
+      test_author.save
+      test_author.delete
+      expect(Author.all).to eq []
+    end
+  end
 end

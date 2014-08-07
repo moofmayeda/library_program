@@ -28,4 +28,13 @@ class Author
   def ==(another_book)
     self.name == another_book.name
   end
+
+  def edit(new_name)
+    @name = new_name
+    DB.exec("UPDATE authors SET name = '#{new_name}' WHERE id = #{@id};")
+  end
+
+  def delete
+    DB.exec("DELETE FROM authors WHERE id = #{@id};")
+  end
 end

@@ -53,4 +53,45 @@ class Patron
   def due_date_lookup(book)
     self.books.key(book)
   end
+
+  def history
+    results = DB.exec("SELECT * FROM returns JOIN books ON (book_id = books.id) WHERE patron_id = #{self.id};")
+    hash = {}
+    results.each do |result|
+      date = result['date']
+      hash[date] = Book.new({:id => result['id'].to_i, :title => result['title']})
+    end
+    hash
+  end
+
+  def self.overdue
+    patrons = []
+    results = DB.exec("SELECT DISTINCT ON (patron_id) patron_id, book_id, due_date, name FROM checkouts JOIN patrons ON (patrons.id = checkouts.patron_id) WHERE due_date < current_date;")
+    results.each do |result|
+      attributes = {
+        :id => result['patron_id'].to_i,
+        :name => result['name']
+      }
+      patrons << Patron.new(attributes)
+    end
+    patrons
+  end
+
+  def overdue_books
+    results = DB.exec("SELECT * FROM checkouts JOIN books ON (book_id = books.id) WHERE patron_id = #{self.id} AND due_date < current_date;")
+    hash = {}
+    results.each do |result|
+      due_date = result['due_date']
+      hash[due_date] = Book.new({:id => result['id'].to_i, :title => result['title']})
+    end
+    hash
+  end
+
+  def self.all_overdue
+    list = []
+    self.overdue.each do |patron|
+      list << [patron, patron.overdue_books]
+    end
+    list
+  end
 end

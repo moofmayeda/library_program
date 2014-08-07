@@ -36,6 +36,32 @@ class Book
     Book.new(attributes)
   end
 
+  def self.search_by_title(query)
+    results = DB.exec("SELECT * FROM books WHERE title LIKE '#{query}%';")
+    books = []
+    results.each do |result|
+      attributes = {
+        :title => result['title'],
+        :id => result['id'].to_i
+      }
+      books << Book.new(attributes)
+    end
+    books
+  end
+
+  def self.search_by_author(query)
+    results = DB.exec("SELECT books.* FROM authors JOIN books_authors ON (authors.id = books_authors.author_id) JOIN books ON (books_authors.book_id = books.id) WHERE authors.name ~ '.*#{query}.*';")
+    books = []
+    results.each do |result|
+      attributes = {
+        :title => result['title'],
+        :id => result['id'].to_i
+      }
+      books << Book.new(attributes)
+    end
+    books
+  end
+
   def add_author(author)
     DB.exec("INSERT INTO books_authors (book_id, author_id) VALUES (#{self.id}, #{author.id});")
   end

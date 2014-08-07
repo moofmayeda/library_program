@@ -72,11 +72,40 @@ describe "Book" do
   end
 
   describe ".find" do
-    it "returns book object given a title" do
+    it "returns book object given the id" do
       test_book = Book.new({:title => "Great Expectations"})
       test_book.save
       id = test_book.id
       expect(Book.find(id)).to eq test_book
+    end
+  end
+
+  describe ".search_by_title" do
+    it "returns a list of books that match the give search criteria" do
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      test_book2 = Book.new({:title => "Great Gatsby"})
+      test_book2.save
+      expect(Book.search_by_title("Great")).to eq [test_book, test_book2]
+    end
+  end
+
+  describe ".search_by_author" do
+    it "returns a list of books that match the give search criteria" do
+      test_author = Author.new({:name => "F. Scott Fitzgerald"})
+      test_author.save
+      test_book1 = Book.new({:title => "Great Gatsby"})
+      test_book1.save
+      test_book2 = Book.new({:title => "Great Expectations"})
+      test_book2.save
+      test_author2 = Author.new({:name => "Another Author"})
+      test_author2.save
+      test_book3 = Book.new({:title => "Another book"})
+      test_book3.save
+      test_book1.add_author(test_author)
+      test_book2.add_author(test_author)
+      test_book3.add_author(test_author2)
+      expect(Book.search_by_author("Fitzgerald")).to eq [test_book1, test_book2]
     end
   end
 end
