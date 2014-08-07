@@ -127,4 +127,12 @@ describe "Patron" do
       expect(Patron.all_overdue).to eq [[test_patron, {'2014-08-01' => test_book}]]
     end
   end
+
+  describe ".find" do
+    it "returns a patron given their name" do
+      test_patron = Patron.new({:name => "Pat Patron"})
+      test_patron.save
+      expect(Patron.find("Pat Patron")).to eq test_patron
+    end
+  end
 end

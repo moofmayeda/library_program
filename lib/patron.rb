@@ -25,6 +25,15 @@ class Patron
     patrons
   end
 
+  def self.find(patron)
+    result = DB.exec("SELECT * FROM patrons WHERE name = '#{patron}';").first
+    attributes = {
+        :name => result['name'],
+        :id => result['id'].to_i
+      }
+    Patron.new(attributes)
+  end
+
   def ==(another_patron)
     self.name == another_patron.name
   end
