@@ -108,4 +108,37 @@ describe "Book" do
       expect(Book.search_by_author("Fitzgerald")).to eq [test_book1, test_book2]
     end
   end
+
+  describe "remove_author" do
+    it "removes an author from a book" do
+      test_author = Author.new({:name => "F. Scott Fitzgerald"})
+      test_author.save
+      test_author2 = Author.new({:name => "Another Author"})
+      test_author2.save
+      test_book1 = Book.new({:title => "Great Gatsby"})
+      test_book1.save
+      test_book1.add_author(test_author)
+      test_book1.add_author(test_author2)
+      test_book1.remove_author(test_author)
+      expect(test_book1.authors).to eq [test_author2]
+    end
+  end
+
+  describe "delete" do
+    it "removes the book from the database" do
+      test_book1 = Book.new({:title => "Great Gatsby"})
+      test_book1.save
+      test_book1.delete
+      expect(Book.all).to eq []
+    end
+  end
+
+  describe "update" do
+    it "changes the title of a book" do
+      test_book1 = Book.new({:title => "Great Gatsby"})
+      test_book1.save
+      test_book1.update("A Tale of Two Cities")
+      expect(test_book1.title).to eq "A Tale of Two Cities"
+    end
+  end
 end

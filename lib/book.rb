@@ -90,4 +90,17 @@ class Book
   def add_copies(number)
     DB.exec("UPDATE copies SET copies = (copies + #{number}) WHERE book_id = #{self.id};")
   end
+
+  def remove_author(author)
+    DB.exec("DELETE FROM books_authors WHERE book_id = #{@id} AND author_id = #{author.id};")
+  end
+
+  def delete
+    DB.exec("DELETE FROM books WHERE id = #{@id};")
+  end
+
+  def update(title)
+    @title = title
+    DB.exec("UPDATE books SET title = '#{title}' WHERE id = #{@id};")
+  end
 end
