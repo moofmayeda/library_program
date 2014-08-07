@@ -61,4 +61,22 @@ describe "Book" do
       expect(test_book.copies).to eq 1
     end
   end
+
+  describe "add_copies" do
+    it "changes the number of copies of a book in the database" do
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      test_book.add_copies(5)
+      expect(test_book.copies).to eq 6
+    end
+  end
+
+  describe ".find" do
+    it "returns book object given a title" do
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      id = test_book.id
+      expect(Book.find(id)).to eq test_book
+    end
+  end
 end

@@ -27,6 +27,15 @@ class Book
     books
   end
 
+  def self.find(id)
+    result = DB.exec("SELECT * FROM books WHERE id = #{id};").first
+    attributes = {
+      :title => result['title'],
+      :id => result['id'].to_i
+    }
+    Book.new(attributes)
+  end
+
   def add_author(author)
     DB.exec("INSERT INTO books_authors (book_id, author_id) VALUES (#{self.id}, #{author.id});")
   end
@@ -50,5 +59,9 @@ class Book
 
   def copies
     DB.exec("SELECT copies.copies FROM books JOIN copies on (books.id = copies.book_id) WHERE books.id = #{self.id};").first['copies'].to_i
+  end
+
+  def add_copies(number)
+    DB.exec("UPDATE copies SET copies = (copies + #{number}) WHERE book_id = #{self.id};")
   end
 end

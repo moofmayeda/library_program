@@ -36,4 +36,50 @@ describe "Patron" do
       expect(test_patron).to eq test_patron2
     end
   end
+
+  describe "checkout" do
+    it "checks out a book to a patron" do
+      test_patron = Patron.new({:name => "Pat Patron"})
+      test_patron.save
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      test_patron.checkout(test_book, '2014-8-12')
+      expect(test_patron.books).to eq({'2014-08-12' => test_book})
+    end
+  end
+
+  describe "books" do
+    it "displays the books a patron has checked out" do
+      test_patron = Patron.new({:name => "Pat Patron"})
+      test_patron.save
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      test_patron.checkout(test_book, '2014-8-12')
+      expect(test_patron.books).to eq({'2014-08-12' => test_book})
+    end
+  end
+
+  describe "return" do
+    it "returns a book to the library, increases copies by 1, adds record to returns table" do
+      test_patron = Patron.new({:name => "Pat Patron"})
+      test_patron.save
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      test_patron.checkout(test_book, '2014-08-12')
+      test_patron.return(test_book, '2014-08-07')
+      expect(test_patron.books).to eq({})
+      expect(test_book.copies).to eq 1
+    end
+  end
+
+  describe "due_date_lookup" do
+    it "checks when a book is due" do
+      test_patron = Patron.new({:name => "Pat Patron"})
+      test_patron.save
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      test_patron.checkout(test_book, '2014-08-12')
+      expect(test_patron.due_date_lookup(test_book)).to eq '2014-08-12'
+    end
+  end
 end
