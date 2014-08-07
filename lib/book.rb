@@ -11,6 +11,7 @@ class Book
   def save
     result = DB.exec("INSERT INTO books (title) VALUES ('#{@title}') RETURNING id;")
     @id = result.first['id'].to_i
+    DB.exec("INSERT INTO copies (book_id, copies) VALUES (#{@id}, 1);")
   end
 
   def self.all
@@ -45,5 +46,9 @@ class Book
 
   def ==(another_book)
     self.title == another_book.title
+  end
+
+  def copies
+    DB.exec("SELECT copies.copies FROM books JOIN copies on (books.id = copies.book_id) WHERE books.id = #{self.id};").first['copies'].to_i
   end
 end

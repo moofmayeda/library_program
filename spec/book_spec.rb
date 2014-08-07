@@ -15,6 +15,12 @@ describe "Book" do
       test_book.save
       expect(Book.all).to eq [test_book]
     end
+
+    it "sets the number of copies to 1" do
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      expect(test_book.copies).to eq 1
+    end
   end
 
   describe ".all" do
@@ -45,6 +51,14 @@ describe "Book" do
       test_book.save
       test_book.add_author(test_author)
       expect(test_book.authors).to eq [test_author]
+    end
+  end
+
+  describe "copies" do
+    it "pulls the number of copies from the database" do
+      test_book = Book.new({:title => "Great Expectations"})
+      test_book.save
+      expect(test_book.copies).to eq 1
     end
   end
 end
