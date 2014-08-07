@@ -36,4 +36,15 @@ describe "Book" do
       expect(test_book).to eq test_book2
     end
   end
+
+  describe "add_author" do
+    it "adds a new author to the book" do
+      test_author = Author.new({:name => "F. Scott Fitzgerald"})
+      test_author.save
+      test_book = Book.new({:title => "Great Gatsby"})
+      test_book.save
+      test_book.add_author(test_author)
+      expect(test_book.authors).to eq [test_author]
+    end
+  end
 end
